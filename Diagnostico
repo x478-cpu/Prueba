@@ -1,0 +1,92 @@
+// 📋 CODIGO ESP32 - PRUEBA DE COMUNICACIÓN PURA
+#define IN1 12    
+#define IN2 13    
+#define IN3 14     
+#define IN4 15    
+#define LED_BUILTIN 2
+
+void setup() {
+  // Configurar pines como salidas simples
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+  
+  // Iniciar todos en LOW
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+  digitalWrite(LED_BUILTIN, LOW);
+  
+  // Serial SIN delays ni mensajes iniciales problemáticos
+  Serial.begin(115200);
+  
+  // Solo un mensaje muy breve
+  Serial.println("START");
+}
+
+void loop() {
+  // Leer cualquier carácter que llegue
+  if (Serial.available() > 0) {
+    char comando = Serial.read();
+    
+    // Encender LED para indicar que recibió algo
+    digitalWrite(LED_BUILTIN, HIGH);
+    
+    // Responder inmediatamente con lo recibido
+    Serial.print("RECEIVED:");
+    Serial.println(comando);
+    
+    // Ejecutar comando inmediatamente
+    switch(comando) {
+      case 'F': // ADELANTE
+        digitalWrite(IN1, LOW);
+        digitalWrite(IN2, HIGH);
+        digitalWrite(IN3, LOW);
+        digitalWrite(IN4, HIGH);
+        Serial.println("ACTION:FORWARD");
+        break;
+        
+      case 'L': // IZQUIERDA
+        digitalWrite(IN1, HIGH);
+        digitalWrite(IN2, LOW);
+        digitalWrite(IN3, LOW);
+        digitalWrite(IN4, HIGH);
+        Serial.println("ACTION:LEFT");
+        break;
+        
+      case 'R': // DERECHA
+        digitalWrite(IN1, LOW);
+        digitalWrite(IN2, HIGH);
+        digitalWrite(IN3, HIGH);
+        digitalWrite(IN4, LOW);
+        Serial.println("ACTION:RIGHT");
+        break;
+        
+      case 'S': // BUSCAR
+        digitalWrite(IN1, HIGH);
+        digitalWrite(IN2, LOW);
+        digitalWrite(IN3, LOW);
+        digitalWrite(IN4, HIGH);
+        Serial.println("ACTION:SEARCH");
+        break;
+        
+      case 'X': // DETENER
+        digitalWrite(IN1, LOW);
+        digitalWrite(IN2, LOW);
+        digitalWrite(IN3, LOW);
+        digitalWrite(IN4, LOW);
+        digitalWrite(LED_BUILTIN, LOW);
+        Serial.println("ACTION:STOP");
+        break;
+        
+      default:
+        Serial.println("ACTION:UNKNOWN");
+        break;
+    }
+  }
+  
+  delay(10);
+}
